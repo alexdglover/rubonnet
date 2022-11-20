@@ -1,5 +1,5 @@
 module Kubernetes
-  class Deployment < Rubonnet
+  class DeploymentSpec < Rubonnet
     def initialize
       @value = {
         "apiVersion" => "apps/v1",

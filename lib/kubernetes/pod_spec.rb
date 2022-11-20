@@ -1,5 +1,5 @@
 module Kubernetes
-  class PodTemplateSpec < Rubonnet
+  class PodSpec < Rubonnet
     def initialize
       @value = {
         "apiVersion" => "v1",
