@@ -8,5 +8,12 @@ module Kubernetes
         "spec" => {}
       }
     end
+
+    def add_label(label)
+      labels = @value["metadata"]["labels"] || {}
+      labels = labels.merge(label)
+      @value["metadata"]["labels"] = labels
+      @value
+    end
   end
 end
