@@ -1,35 +1,28 @@
+require_relative 'pod_template_spec'
+
 module Kubernetes
   class DeploymentSpec < Rubonnet
-    def initialize
-      @value = {
-        "apiVersion" => "apps/v1",
-        "kind" => "Deployment",
-        "metadata" => {
-          "creationTimestamp" => nil,
-          "labels" => {}
-        },
-        "name" => "foo",
-        "spec" => {
-          "replicas" => 1
-        },
-        "selector" => {
-          "matchLabels" =>
-            {
-              "app" => "foo"
-            }
-        },
-        "template" => PodTemplateSpec.new.value
-      }
-    end
+    DEFAULTS = {
+      "replicas" => 0,
+      "selector" => nil,
+      "template" => Kubernetes::PodTemplateSpec.new
+    }
 
     def replicas(count)
-      @value["spec"]["replicas"] = count
-      @value
+      self["replicas"] = count
+      self
+    end
+
+    def add_labels_and_label_selector(labels)
+      self["selector"] = {
+        "matchLabels" => labels
+      }
+      self["template"]
     end
 
     def template(pod_template)
-      @value["template"] = pod_template
-      @value
+      self["template"] = pod_template
+      self
     end
   end
 end

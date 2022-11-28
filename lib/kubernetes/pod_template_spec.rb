@@ -1,19 +1,13 @@
+require_relative 'metadata'
+require_relative 'pod_spec'
+
 module Kubernetes
   class PodTemplateSpec < Rubonnet
-    def initialize
-      @value = {
-        "apiVersion" => "v1",
-        "kind" => "Pod",
-        "metadata" => {},
-        "spec" => {}
-      }
-    end
+    include Kubernetes::Metadata
 
-    def add_label(label)
-      labels = @value["metadata"]["labels"] || {}
-      labels = labels.merge(label)
-      @value["metadata"]["labels"] = labels
-      @value
-    end
+    DEFAULTS = {
+      "metadata" => {},
+      "spec" => Kubernetes::PodSpec.new
+    }
   end
 end

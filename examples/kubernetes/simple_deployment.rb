@@ -1,7 +1,7 @@
 require_relative '../../rubonnet'
 Dir['../../lib/kubernetes/*.rb'].each { |file| require_relative file }
 
-some_deployment = Kubernetes::DeploymentSpec.new
+some_deployment = Kubernetes::Deployment.new
 
 some_pod_template = Kubernetes::PodTemplateSpec.new
 

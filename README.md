@@ -20,6 +20,8 @@ fields
 
 ## First attempt
 
+See commit [27d4655](https://github.com/alexdglover/rubonnet/commit/27d4655c39bceba291da38d02811d2e9ab3c3b48)
+
 * A superclass `Rubonnet` will be created with the behavior we expect every object to have. All instances of `Rubonnet`
 and its subclasses must be able to be evaluated to a concrete value. So we'll have a `value` method. Global convenience 
 functions may be defined on the `Rubonnet` class
@@ -59,3 +61,37 @@ some_deployment["template"].add_label("foo" => "bar")
 ```
 
 Let's work to combine the data structures and behaviors in the second attempt
+
+## Second attempt
+
+The expressions we want to work with in Rubonnet are essentially the primitive types that can be serialized - primarily
+Hashes, but also Arrays, Strings, Integers, and Floats. We also want to have some default structure and values for
+certain expressions. There's two ways we can try to achieve this:
+
+* sub-class the Hash class, overriding the `initialize` method to pre-populate the Hash with whatever structure and 
+default values are desired. Additional methods can also be defined on the various sub-classes. 
+* create instances of the Hash class with the desired structure and default values, and use Ruby's metaprogramming
+methods to add methods to the stdlib Hash class. The challenge with this approach is that we'd be dealing with a single
+instance/object, and therefore there's no safe way to update the values without mutating the original object or
+returning a generic Hash object. That is, unless we create a constructor that allows a Hash to be passed in. This would
+allow methods to mutate the Hash, pass the Hash into the `new` method, and get our custom subclass with the right data.
+
+```ruby
+class Rubonnet < Hash
+  DEFAULTS = {}
+  
+  def initialize(value = nil)
+    if value.nil?
+      self.merge!(DEFAULTS)
+      return
+    end
+    raise ArgumentError unless [self.class, Hash].include?(value.class)
+    self.merge!(value)
+  end
+  
+  # ... other helper methods
+end
+```
+
+This looks promising. We can also use the `DEFAULTS` to create add a validation method, ensuring any required keys
+are present. 

@@ -1,7 +1,5 @@
 module Kubernetes
   class PodSpec < Rubonnet
-    def initialize
-      @value = {}
-    end
+    DEFAULTS = {}
   end
 end
